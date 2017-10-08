@@ -4,6 +4,8 @@ from graphics import draw_line, draw_polygon, calc_intersection_point_of_two_lin
 VISIBLE = 'visible'
 HIDDEN = 'hidden'
 TRANSITIVE = 'transitive'
+TO_VISIBLE = 'to visible'
+TO_HIDDEN = 'to hidden'
 
 class Drawer:
     def __init__(self, pixels, cutting_off_field, figures):
@@ -87,7 +89,8 @@ class Drawer:
     def _draw_lines_by_points_with_visibility(self, points, color, hidden_color):
         lines = make_lines_from_points(points)
         for line in lines:
-            if line[0].visibility == VISIBLE or line[1].visibility == VISIBLE:
+            if line[0].visibility == VISIBLE or line[1].visibility == VISIBLE\
+                    or line[0].visibility == TO_VISIBLE or line[1].visibility == TO_HIDDEN:
                 draw_line(self._pixels, line[0], line[1], color)
             else:
                 draw_line(self._pixels, line[0], line[1], hidden_color)
@@ -107,9 +110,16 @@ class Drawer:
         for point in points:
             if point.visibility == TRANSITIVE or point.visibility == HIDDEN:
                 continue
-            if not (self._cutting_off_field.left < point.x < self._cutting_off_field.right):
-                point.visibility = HIDDEN
-            elif not (self._cutting_off_field.top < point.y < self._cutting_off_field.bottom):
+            if self._cutting_off_field.is_point_hidden(point):
                 point.visibility = HIDDEN
             else:
                 point.visibility = VISIBLE
+
+        last_point_visibility = None
+        for point in points:
+            if point.visibility == TRANSITIVE and not self._cutting_off_field.is_point_hidden(point):
+                if last_point_visibility == VISIBLE or last_point_visibility == TO_VISIBLE:
+                    point.visibility = TO_HIDDEN
+                elif last_point_visibility == HIDDEN or last_point_visibility == TO_HIDDEN:
+                    point.visibility = TO_VISIBLE
+            last_point_visibility = point.visibility

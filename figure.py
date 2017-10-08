@@ -38,6 +38,13 @@ class SquareCuttingOffField:
         ]
         self.color = color
 
+    def is_point_hidden(self, point):
+        if not (self.left < point.x < self.right):
+            return True
+        elif not (self.top < point.y < self.bottom):
+            return True
+        return False
+
 
 class Figure:
     def __init__(self, points, color, hidden_color, z_order=None):
