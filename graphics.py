@@ -1,3 +1,5 @@
+from random import randint
+
 import sdl2.ext
 from sdl2 import SDL_Point
 
@@ -10,7 +12,7 @@ class Point(SDL_Point):
 def draw_polygon(pixels, points, color):
     point_count = len(points)
     for i in range(point_count):
-        draw_line(pixels, points[i], points[(i + 1) % point_count], color)
+        draw_line(pixels, points[i], points[(i + 1) % point_count], sdl2.ext.Color(randint(0, 255), randint(0, 255), randint(0, 255), randint(0, 255)))
 
 
 def normalize_point(point):
@@ -106,16 +108,15 @@ def is_point_on_lines(point, lines):
         a = line[1].x - line[0].x
 
         if a == 0:
-            a = line[0].y - line[1].y
+            a = line[1].y - line[0].y
             # TODO(max) => handle if a == 0
             mu = (point.y - line[0].y) / a
         else:
             mu = (point.x - line[0].x) / a
 
-        if mu > 1 or mu < 0:
-            return False
-
-    return True
+        if mu < 0 or mu > 1:
+            return None
+    return mu
 
 
 def calc_intersection_point_of_two_lines(line_a, line_b):
@@ -130,17 +131,18 @@ def calc_intersection_point_of_two_lines(line_a, line_b):
 
     denominator = (x_1 - x_2) * (y_3 - y_4) - (y_1 - y_2) * (x_3 - x_4)
     if denominator == 0:
-        return None
+        return None, None
 
     a = x_1 * y_2 - y_1 * x_2
     b = x_3 * y_4 - y_3 * x_4
 
     x_numerator = a * (x_3 - x_4) - (x_1 - x_2) * b
     x = x_numerator / denominator
-    y_numerator = a * (y_3 - y_4) - (y_1 - y_2) * (b)
-    y = x_numerator / denominator
+    y_numerator = a * (y_3 - y_4) - (y_1 - y_2) * b
+    y = y_numerator / denominator
 
     point = Point(round(x), round(y))
 
-    return point if is_point_on_lines(point, [line_a, line_b]) else None
+    mu = is_point_on_lines(point, [line_a, line_b])
+    return (point, mu) if mu is not None else (None, None)
 

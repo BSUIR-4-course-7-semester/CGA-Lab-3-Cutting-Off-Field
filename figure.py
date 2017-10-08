@@ -55,11 +55,13 @@ class Figure:
         count = 0
         ray = [Point(x_1, y), Point(x_2, y)]
 
-        for line in make_lines_from_points(self.points):
-            intersection_point = calc_intersection_point_of_two_lines(ray, line)
+        lines_from_points = make_lines_from_points(self.points)
+        for line in lines_from_points:
+            intersection_point, _ = calc_intersection_point_of_two_lines(ray, line)
             if intersection_point:
                 count += 1
-        return True if count % 2 == 1 and count != 0 else False
+
+        return True if count % 2 == 1 else False
 
     def move(self, dx, dy):
         self._dx += dx

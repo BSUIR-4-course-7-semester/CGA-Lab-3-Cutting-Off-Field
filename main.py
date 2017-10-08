@@ -32,12 +32,12 @@ def main():
             Point(50, 50),
             Point(50, -50),
             Point(-50, -50)
-        ], sdl2.ext.Color(255, 116, 113, 255), sdl2.ext.Color(255, 200, 50, 255), z_order=2),
+        ], sdl2.ext.Color(255, 116, 113, 255), sdl2.ext.Color(255, 200, 50, 255), z_order=1),
         Figure([
             Point(0, 200),
             Point(200, 200),
             Point(100, 0)
-        ], sdl2.ext.Color(120, 116, 113, 255), sdl2.ext.Color(35, 116, 174, 255), z_order=1)
+        ], sdl2.ext.Color(120, 116, 113, 255), sdl2.ext.Color(35, 116, 174, 255), z_order=2)
     ]
     figures.sort(key=lambda f: f.z_order)
 

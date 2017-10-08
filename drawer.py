@@ -26,10 +26,16 @@ class Drawer:
 
         for line_b in lines_b:
             intersection_points = []
+            mu_vector = []
             for line_a in lines_a:
-                intersection_point = calc_intersection_point_of_two_lines(line_a, line_b)
-                if intersection_point:
+                intersection_point, mu = calc_intersection_point_of_two_lines(line_a, line_b)
+                if intersection_point is not None:
                     intersection_points.append(intersection_point)
+                    mu_vector.append(mu)
+
+            pack = list(zip(intersection_points, mu_vector))
+            pack.sort(key=lambda a: a[1])
+            intersection_points = list(map(lambda a: a[0], pack))
 
             points_b.append(line_b[0])
             points_b.extend(intersection_points)
