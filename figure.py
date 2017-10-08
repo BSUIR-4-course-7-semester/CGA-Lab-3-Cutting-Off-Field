@@ -1,5 +1,4 @@
-from point import Point
-from graphics import draw_polygon, get_pixel, calc_intersection_point_of_two_lines
+from graphics import draw_polygon, get_pixel, calc_intersection_point_of_two_lines, Point
 import sdl2.ext
 import numpy as np
 from math import cos, sin, radians
@@ -26,8 +25,17 @@ def make_lines_from_points(points):
     return [[points[i], points[(i + 1) % len(points)]] for i in range(len(points))]
 
 class SquareCuttingOffField:
-    def __init__(self, points, color):
-        self.points = points
+    def __init__(self, top, right, bottom, left, color):
+        self.top = top
+        self.right = right
+        self.bottom = bottom
+        self.left = left
+        self.points = [
+            Point(left, top),
+            Point(right, top),
+            Point(right, bottom),
+            Point(left, bottom)
+        ]
         self.color = color
 
 

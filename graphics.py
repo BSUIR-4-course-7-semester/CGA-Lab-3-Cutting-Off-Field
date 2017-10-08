@@ -5,6 +5,10 @@ from sdl2 import SDL_Point
 
 
 class Point(SDL_Point):
+    def __init__(self, a, b):
+        super(Point, self).__init__(a, b)
+        self.visibility = None
+
     def __add__(self, value):
         return Point(self.x + value.x, self.y + value.y)
 
@@ -12,7 +16,7 @@ class Point(SDL_Point):
 def draw_polygon(pixels, points, color):
     point_count = len(points)
     for i in range(point_count):
-        draw_line(pixels, points[i], points[(i + 1) % point_count], sdl2.ext.Color(randint(0, 255), randint(0, 255), randint(0, 255), randint(0, 255)))
+        draw_line(pixels, points[i], points[(i + 1) % point_count], color)
 
 
 def normalize_point(point):

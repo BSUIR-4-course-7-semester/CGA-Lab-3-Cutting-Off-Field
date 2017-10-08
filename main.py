@@ -28,25 +28,20 @@ def main():
 
     figures = [
         Figure([
-            Point(-50, 50),
-            Point(50, 50),
-            Point(50, -50),
-            Point(-50, -50)
-        ], sdl2.ext.Color(255, 116, 113, 255), sdl2.ext.Color(255, 200, 50, 255), z_order=1),
+            Point(150, 100),
+            Point(250, 100),
+            Point(250, 210),
+            Point(150, 210)
+        ], sdl2.ext.Color(0, 255, 0, 255), sdl2.ext.Color(220, 220, 220, 255), z_order=1),
         Figure([
             Point(0, 200),
             Point(200, 200),
             Point(100, 0)
-        ], sdl2.ext.Color(120, 116, 113, 255), sdl2.ext.Color(35, 116, 174, 255), z_order=2)
+        ], sdl2.ext.Color(0, 0, 255, 255), sdl2.ext.Color(220, 220, 220, 255), z_order=2)
     ]
     figures.sort(key=lambda f: f.z_order)
 
-    cutting_off_field = SquareCuttingOffField([
-        Point(50, 50),
-        Point(590, 50),
-        Point(590, 430),
-        Point(50, 430)
-    ], sdl2.ext.Color(5, 5, 113, 255))
+    cutting_off_field = SquareCuttingOffField(50, 590, 430, 50, sdl2.ext.Color(255, 0, 0, 255))
 
     drawer = Drawer(pixels, cutting_off_field, figures)
 
@@ -68,9 +63,7 @@ def main():
                 selected_figure_index = None
                 SDL_GetMouseState(ctypes.byref(old_x), ctypes.byref(old_y))
                 for i in range(len(figures)):
-                    print('finding selected figure')
                     if figures[i].is_point_inside(Point(old_x.value, old_y.value)):
-                        print('found selected figure')
                         selected_figure_index = i
                         break
 
