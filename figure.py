@@ -39,11 +39,21 @@ class SquareCuttingOffField:
         self.color = color
 
     def is_point_hidden(self, point):
-        if not (self.left < point.x < self.right):
-            return True
-        elif not (self.top < point.y < self.bottom):
-            return True
-        return False
+        if self.left <= point.x <= self.right and self.top <= point.y <= self.bottom:
+            return False
+        return True
+
+    def get_cohen_sutherland_code_for_point(self, point):
+        res = 0
+        if point.x <= self.left:
+            res |= 8
+        elif point.x >= self.right:
+            res |= 4
+        if point.y <= self.top:
+            res |= 1
+        elif point.y >= self.bottom:
+            res |= 2
+        return res
 
 
 class Figure:

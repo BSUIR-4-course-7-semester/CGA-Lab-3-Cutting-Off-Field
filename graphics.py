@@ -8,6 +8,8 @@ class Point(SDL_Point):
     def __init__(self, a, b):
         super(Point, self).__init__(a, b)
         self.visibility = None
+        self.hidden_by = 0
+        self.with_ = 0
 
     def __add__(self, value):
         return Point(self.x + value.x, self.y + value.y)
