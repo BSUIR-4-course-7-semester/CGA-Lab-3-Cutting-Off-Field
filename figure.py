@@ -67,11 +67,6 @@ class Figure:
         self._dy = 0
         self._angle = 0
 
-    # def draw(self):
-    #
-    #     self._points = list(map(lambda p: move_point(p, self._dx, self._dy), self._points))
-    #     draw_polygon(self._pixels, self._points, self.color, self._filled)
-
     def is_point_inside(self, point):
         x_1 = point.x
         # TODO(max) => get from width of window
