@@ -2,6 +2,8 @@ import ctypes
 
 import sdl2.ext
 import sys
+
+import time
 from sdl2 import *
 from sdl2.examples.pixelaccess import BLACK
 
@@ -28,15 +30,15 @@ def main():
 
     figures = [
         Figure([
-            Point(150, 100),
-            Point(250, 100),
-            Point(250, 210),
-            Point(150, 210)
+            Point(250, 200),
+            Point(380, 200),
+            Point(380, 310),
+            Point(250, 310)
         ], sdl2.ext.Color(0, 255, 0, 255), sdl2.ext.Color(255, 255, 255, 255), z_order=1),
         Figure([
-            Point(500, 60),
-            Point(300, 100),
-            Point(550, 100)
+            Point(330, 250),
+            Point(400, 300),
+            Point(160, 300)
         ], sdl2.ext.Color(0, 0, 255, 255), sdl2.ext.Color(255, 255, 255, 255), z_order=2)
     ]
     figures.sort(key=lambda f: f.z_order)
@@ -53,48 +55,65 @@ def main():
 
     is_changed = True
 
+    frame_interval = 0.001
+
+    last_time = time.time()
+    dy = [1, -1]
+    animation_y_boards = [[200, 300], [200, 300]]
+
     while running:
         events = sdl2.ext.get_events()
         for event in events:
             if event.type == sdl2.SDL_QUIT:
                 running = False
                 break
-            if event.type == sdl2.SDL_MOUSEBUTTONDOWN:
-                selected_figure_index = None
-                SDL_GetMouseState(ctypes.byref(old_x), ctypes.byref(old_y))
-                for i in range(len(figures)):
-                    if figures[i].is_point_inside(Point(old_x.value, old_y.value)):
-                        selected_figure_index = i
-                        break
+            # if event.type == sdl2.SDL_MOUSEBUTTONDOWN:
+            #     selected_figure_index = None
+            #     SDL_GetMouseState(ctypes.byref(old_x), ctypes.byref(old_y))
+            #     for i in range(len(figures)):
+            #         if figures[i].is_point_inside(Point(old_x.value, old_y.value)):
+            #             selected_figure_index = i
+            #             break
+            #
+            # if event.type == sdl2.SDL_MOUSEBUTTONUP:
+            #     selected_figure_index = None
+            #
+            # if event.type == sdl2.SDL_MOUSEMOTION:
+            #     if selected_figure_index is not None:
+            #         x = ctypes.c_int32(0)
+            #         y = ctypes.c_int32(0)
+            #         SDL_GetMouseState(ctypes.byref(x), ctypes.byref(y))
+            #         dx = x.value - old_x.value
+            #         dy = y.value - old_y.value
+            #         old_x = x
+            #         old_y = y
+            #         figures[selected_figure_index].move(dx, dy)
+            #         is_changed = True
+            #
+            # if event.type == sdl2.SDL_MOUSEWHEEL:
+            #     x = ctypes.c_int32(0)
+            #     y = ctypes.c_int32(0)
+            #     SDL_GetMouseState(ctypes.byref(x), ctypes.byref(y))
+            #     active_figure = None
+            #     for figure in figures:
+            #         if figure.is_point_inside(Point(old_x.value, old_y.value)):
+            #             active_figure = figure
+            #             break
+            #
+            #     if active_figure:
+            #         active_figure.rotate(event.wheel.y)
+            #         is_changed = True
 
-            if event.type == sdl2.SDL_MOUSEBUTTONUP:
-                selected_figure_index = None
+        now = time.time()
 
-            if event.type == sdl2.SDL_MOUSEMOTION:
-                if selected_figure_index is not None:
-                    x = ctypes.c_int32(0)
-                    y = ctypes.c_int32(0)
-                    SDL_GetMouseState(ctypes.byref(x), ctypes.byref(y))
-                    dx = x.value - old_x.value
-                    dy = y.value - old_y.value
-                    old_x = x
-                    old_y = y
-                    figures[selected_figure_index].move(dx, dy)
-                    is_changed = True
+        if now - last_time >= frame_interval:
+            for i in range(len(figures)):
+                figures[i].move(0, dy[i])
+                is_changed = True
+                if figures[i].points[0].y > animation_y_boards[i][1] or figures[i].points[0].y < animation_y_boards[i][0]:
+                    dy[i] *= -1
+            last_time = now
 
-            if event.type == sdl2.SDL_MOUSEWHEEL:
-                x = ctypes.c_int32(0)
-                y = ctypes.c_int32(0)
-                SDL_GetMouseState(ctypes.byref(x), ctypes.byref(y))
-                active_figure = None
-                for figure in figures:
-                    if figure.is_point_inside(Point(old_x.value, old_y.value)):
-                        active_figure = figure
-                        break
-
-                if active_figure:
-                    active_figure.rotate(event.wheel.y)
-                    is_changed = True
 
         if is_changed:
             clear(window_surface)

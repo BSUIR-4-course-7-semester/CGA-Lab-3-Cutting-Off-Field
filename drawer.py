@@ -44,6 +44,7 @@ class Drawer:
                     intersection_point.visibility = TRANSITIVE
                     # intersection_point.hidden_by |= FIGURE
                     intersection_point.with_ = FIGURE
+
             for line in lines_cutting_off:
                 intersection_point, mu = calc_intersection_point_of_two_lines(line, line_b)
                 if intersection_point is not None:
